@@ -39,7 +39,7 @@ int mfd_str_readexact(mfd_stream str, void *buffer, size_t bytes){
 
     size_t remain = bytes;
     while (remain > 0) {
-        ssize_t write_len = read(tfd_get(*str.tfd, 0), buffer, remain);
+        ssize_t write_len = mfd_read(str.tfd, buffer, remain);
         if (write_len < 0) {
             if (errno == EINTR || errno == EAGAIN) {
                 // EINTR: interrupted by system
@@ -79,7 +79,7 @@ int mfd_str_readmax(mfd_stream str, size_t *out_size, void **buffer){
     *out_size = 0;
     while (true) {
         char buf[1024] = {0};
-        ssize_t read_len = read(tfd_get(*str.tfd, 0), buf, 1024);
+        ssize_t read_len = mfd_read(str.tfd, buf, 1024);
         if (read_len < 0) {
             if (errno == EINTR || errno == EAGAIN) {
                 continue;
@@ -115,7 +115,7 @@ int mfd_str_writeexact(mfd_stream str, size_t bytes, const void *buffer){
     
     size_t remain = bytes;
     while (remain > 0) {
-        ssize_t write_len = write(tfd_get(*str.tfd, 0), buffer, remain);
+        ssize_t write_len = mfd_write(str.tfd, buffer, remain);
         if (write_len < 0) {
             if (errno == EINTR || errno == EAGAIN) {
                 // EINTR: interrupted by system

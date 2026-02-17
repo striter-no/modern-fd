@@ -1,11 +1,13 @@
 #include "pfd.h"
+#include "imfd.h"
 
 #ifndef MFD_TFD
 
 typedef enum {
     GENERAL_FD,
     RAW_FD,
-    PROGRAM_FD
+    PROGRAM_FD,
+    IMM_FD
 } t_fd_type;
 
 typedef struct {
@@ -13,6 +15,7 @@ typedef struct {
         g_fd gfd;
         r_fd rfd;
         p_fd *pfd;
+        im_fd *ifd;
     } fd;
 
     t_fd_type t;
@@ -30,6 +33,9 @@ int mfd_tfd(void *generic_fd, t_fd_type t, t_fd *out){
         case PROGRAM_FD: 
             out->fd.pfd = (p_fd*)generic_fd;
         return 0;
+        case IMM_FD: 
+            out->fd.ifd = (im_fd*)generic_fd;
+        return 0;
         default:
             return -1;
     }
@@ -42,6 +48,7 @@ int tfd_get(t_fd fd, int readm){
             return readm == 0 ? fd.fd.gfd.fd_r.rfd: fd.fd.gfd.fd_w.rfd;
         case RAW_FD: 
             return fd.fd.rfd.rfd;
+        case IMM_FD:
         case PROGRAM_FD: 
             return -1;
         default:
@@ -55,6 +62,7 @@ bool mfd_readable(t_fd fd){
             return fd.fd.gfd.fd_r.readable;
         case RAW_FD: 
             return fd.fd.rfd.readable;
+        case IMM_FD:
         case PROGRAM_FD: 
             return true;
         default:
@@ -68,6 +76,7 @@ bool mfd_writeable(t_fd fd){
             return fd.fd.gfd.fd_w.writable;
         case RAW_FD: 
             return fd.fd.rfd.writable;
+        case IMM_FD:
         case PROGRAM_FD: 
             return true;
         default:
