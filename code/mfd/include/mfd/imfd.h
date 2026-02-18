@@ -26,24 +26,24 @@ im_fd mfd_imfd(){
     };
 }
 
-void mfd_imfd_pollout(const im_fd *fd){
+void mfd_imfd_pollout(im_fd fd){
     uint64_t u = 1;
-    write(fd->pollout_ev, &u, sizeof(u));
+    write(fd.pollout_ev, &u, sizeof(u));
 }
 
-void mfd_imfd_pollin(const im_fd *fd){
+void mfd_imfd_pollin(im_fd fd){
     uint64_t u = 1;
-    write(fd->pollin_ev, &u, sizeof(u));
+    write(fd.pollin_ev, &u, sizeof(u));
 }
 
-void mfd_imfd_wpollout(const im_fd *fd){
+void mfd_imfd_wpollout(im_fd fd){
     uint64_t u;
-    read(fd->pollout_ev, &u, sizeof(u));
+    read(fd.pollout_ev, &u, sizeof(u));
 }
 
-void mfd_imfd_wpollin(const im_fd *fd){
+void mfd_imfd_wpollin(im_fd fd){
     uint64_t u;
-    read(fd->pollin_ev, &u, sizeof(u));
+    read(fd.pollin_ev, &u, sizeof(u));
 }
 
 int mfd_imfd_fbuf(char *buffer, size_t size, im_fd *out){
