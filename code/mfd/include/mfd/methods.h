@@ -61,7 +61,7 @@ ssize_t mfd_pread(p_fd *fd, void *buf, size_t n_bytes) {
 // IMMEDIATE FD
 
 ssize_t mfd_iwrite(im_fd *fd, const void *buf, size_t n){
-    mfd_imfd_wpollout(*fd);
+    mfd_imfd_wpollout(fd);
 
     size_t available = MFD_PFD_SIZE - fd->used;
     if (available == 0) return 0;
@@ -74,16 +74,16 @@ ssize_t mfd_iwrite(im_fd *fd, const void *buf, size_t n){
     }
     
     if (fd->used < MFD_PFD_SIZE){
-        mfd_imfd_pollout(*fd);
+        mfd_imfd_pollout(fd);
     }
 
-    mfd_imfd_pollin(*fd);
+    mfd_imfd_pollin(fd);
 
     return (ssize_t)to_write;
 }
 
 ssize_t mfd_iread(im_fd *fd, void *buf, size_t n_bytes) {
-    mfd_imfd_wpollin(*fd);
+    mfd_imfd_wpollin(fd);
     if (fd->used == 0) return 0;
 
     size_t to_read = (n_bytes < (size_t)fd->used) ? n_bytes : (size_t)fd->used;
@@ -95,10 +95,10 @@ ssize_t mfd_iread(im_fd *fd, void *buf, size_t n_bytes) {
     }
 
     if (fd->used != 0){
-        mfd_imfd_pollin(*fd);
+        mfd_imfd_pollin(fd);
     }
 
-    mfd_imfd_pollout(*fd);
+    mfd_imfd_pollout(fd);
     return (ssize_t)to_read;
 }
 
